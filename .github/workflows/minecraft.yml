@@ -1,0 +1,28 @@
+
+name: Minecraft
+on:
+  push:
+  watch:
+    types: started
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - name: Download And Start Minecraft Server
+       run: |
+          wget https://minecraft.azureedge.net/bin-linux/bedrock-server-1.16.40.02.zip
+          unzip bedrock-server-1.16.40.02.zip
+          LD_LIBRARY_PATH=. ./bedrock_server
+
+     - name: Start Ngrok
+       env:
+         NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+       run: |
+          wget -q https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip
+          unzip ngrok-stable-linux-386.zip
+          chmod +x ./ngrok
+          rm -f .ngrok.log
+          ./ngrok authtoken "$NGROK_TOKEN"
+          ./ngrok tcp 22 --log ".ngrok.log" &
+
