@@ -1,4 +1,3 @@
-
 name: Minecraft
 on:
   push:
@@ -25,5 +24,9 @@ jobs:
           chmod +x ./ngrok
           rm -f .ngrok.log
           ./ngrok authtoken "$NGROK_TOKEN"
-          ./ngrok tcp 22 --log ".ngrok.log" &
+          ./ngrok udp 19132 --log ".ngrok.log" 
+          
+     - name: Wait
+       run: |
+         sleep 6h
 
